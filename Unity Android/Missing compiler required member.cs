@@ -15,7 +15,6 @@ namespace System.Runtime.CompilerServices
 			this.m_relaxations = relaxations;
 		}
 
-
 		public CompilationRelaxationsAttribute(CompilationRelaxations relaxations)
 		{
 			this.m_relaxations = (int)relaxations;
