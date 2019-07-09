@@ -1,0 +1,82 @@
+///dump Xgame dll from memory
+//MultilingualSys
+private void OnGUI()
+	{
+		RoH3v3.OnGUI();
+	}
+
+//CSkill
+public float m_coolDownTime
+	{
+		get
+		{
+			if (RoH3v3.toggle2)
+			{
+				return 0f;
+			}
+			return this._m_coolDownTime.m_value;
+		}
+	}
+	
+//VipSys
+	public int GetVipLv()
+	{
+		this.InitVipState();
+		if (RoH3v3.toggle3)
+		{
+			return this.m_maxVipLv;
+		}
+		return this.m_vipLv;
+	}
+	
+//CAttackDamageCaculate
+public long CalculateDamageValue(CAttackedInfo attedInfo, Creature defenser, ref DamagePopup dp, bool isRTPVP = false, bool onlyCaculate = false)
+	{
+		if (attedInfo == null || defenser == null)
+		{
+			return 0L;
+		}
+		if (RealTimePVPSys.Instance.CheckIsRTPVPState() && !onlyCaculate && !(attedInfo.m_AttackerCreature is CRTMonster))
+		{
+			CBattleFieldData.CDamagePop damagePopByKey = CBattleFieldData.Instance.GetDamagePopByKey(attedInfo.m_AttackerCreature.m_rid, (int)CBattleFieldData.GetCreatureRTType(defenser), defenser.m_rid, attedInfo.m_key);
+			if (damagePopByKey != null)
+			{
+				DamagePopup damagePopup = new DamagePopup(damagePopByKey.m_damage, damagePopByKey.m_crit, defenser.m_creatureData is MonsterData, defenser.CreatureState == Creature.CreatureGameState.CGS_Collapse, false, 0, false, false, false, attedInfo.m_AttackerCreature, false, false);
+				damagePopup.m_parrayNew = damagePopByKey.m_parray;
+				float num = this.DealShieldRTPVP(attedInfo, defenser, (float)damagePopByKey.m_damage);
+				if (num != 0f)
+				{
+					damagePopup.mDamage = (long)num;
+					if (!(defenser is ShanZhaiDoorCreature) && !(defenser is CTrapCreature) && (defenser is CPlayer || attedInfo.m_AttackerCreature is CPlayer))
+					{
+						GameRoot.GetGameSystem<EventSys>().AddEventNow(EEventType.UI_Msg_UpdateDamagePopup, defenser, damagePopup);
+						if (damagePopByKey.m_damage == -1L)
+						{
+							defenser.SendDodgeBuffEvt(attedInfo);
+						}
+						else if (damagePopByKey.m_crit)
+						{
+							defenser.SendCritBuffEvt(attedInfo);
+						}
+					}
+				}
+				if (attedInfo.m_AttackerCreature is CPlayer || attedInfo.m_AttackerCreature is CPlayerMonster || attedInfo.m_AttackerCreature is CFriend || attedInfo.m_AttackerCreature is CRTPVPPlayer)
+				{
+					num *= (float)RoH3v3.dmgMulti;
+				}
+				if (RoH3v3.toggle1 && (defenser is CPlayer || defenser is CPlayerMonster || defenser is CFriend || defenser is CRTPVPPlayer))
+				{
+					num = 0f;
+				}
+				return (long)num;
+				
+			}
+			EZFunTools.PvpDebug(new object[]
+			{
+				"attedinfo key",
+				attedInfo.m_key + "_" + defenser.transform.name,
+				"not fund"
+			});
+			return 0L;
+		}
+		//also below
