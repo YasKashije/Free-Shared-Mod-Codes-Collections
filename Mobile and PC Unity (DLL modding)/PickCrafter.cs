@@ -2,13 +2,13 @@
 //AndnixSH#
 
 	
-	//Ability.cs
-	public bool IsUnlocked()
+//Ability.cs
+public bool IsUnlocked()
 {
 	return true;
 }
 	
-	private bool IsInCoolDown()
+private bool IsInCoolDown()
 {
 	return false;
 }
@@ -152,6 +152,7 @@ public int TrashDustGain
 	//GameData.cs
 	public static bool upgradePickaxeWithBlock(Pickaxe pick, int numOfLevels = 1)
 	{
+		...
 		if (PickaxeController.IsUpgradableNow(pick) && flag)
 		{
 			BlockIndex purchaseBlock = PickaxeController.GetPurchaseBlock(pick);
@@ -173,6 +174,14 @@ public int TrashDustGain
 		}
 	}
 	
+	
+	//PickaxeController
+	public static int GetBlockCost(Pickaxe pick)
+	{
+		return 0;
+	}
+
+
 	
 	//PickaxeController.cs
 	public static bool AllBiomePickaxesUnlocked()
@@ -350,31 +359,8 @@ public int TrashDustGain
 	}
 	public static int GetCount()
 	{
-		return 999;
+		return 9999;
 	}
-	
-	////////////////orig
-	private void SpendRunicToEarlyOpenChest()
-	{
-		if (this.GetRunicCostForTimeRemaining() > 0)
-		{
-			if (RunicDust.Spend(this.GetRunicCostForTimeRemaining(), "ChestEarlyOpen-" + this.m_targetChest.chestSize.ToString()))
-			{
-				this.OpenTargetChest();
-				this.Hide();
-			}
-			else
-			{
-				int p_cost = (this.m_targetChest == null) ? SingletonBehaviour<ChestController>.instance.GetRunicCostForIAPChestSize(this.m_targetSize) : this.GetRunicCostForTimeRemaining();
-				UISpendRunicPopup.CreateBuyMorePopup(p_cost);
-			}
-		}
-		else
-		{
-			this.OpenTargetChest();
-		}
-		this.Hide();
-	}   
 
 	
 	///Removed
