@@ -1,0 +1,9 @@
+Package: andnix
+Name: Smon Cheats
+Depends: mobilesubstrate
+Version: 1.9
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak from iOSGods.com!
+Maintainer: Andnix
+Author: Andnix
+Section: Tweaks
