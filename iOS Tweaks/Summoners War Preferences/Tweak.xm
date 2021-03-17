@@ -9,7 +9,7 @@ return [[[NSDictionary dictionaryWithContentsOfFile:PLIST_PATH] valueForKey:key]
 
 %ctor {
 
-
+//GetBattleUnitAccuracyRate
 if(GetPrefBool(@"kAcc"))
 {
 writeData(0x11212C,0x6420);
@@ -22,6 +22,7 @@ else
 
 }
 
+//GetBattleUnitCriRate
 if(GetPrefBool(@"kCri"))
 {
 writeData(0x1120CC,0x6420);
@@ -34,6 +35,7 @@ else
 
 }
 
+//_GetBattleUnitCriDamage
 if(GetPrefBool(@"kCriDam"))
 {
 writeData(0x1120FC,0x6420);

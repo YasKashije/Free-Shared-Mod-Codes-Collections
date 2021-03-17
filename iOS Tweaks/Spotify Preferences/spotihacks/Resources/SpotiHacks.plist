@@ -110,12 +110,12 @@
 			<string>After you apply settings, please respring your device.</string>    
 		</dict>
 		<dict>
-	<key>cell</key>
-	<string>PSButtonCell</string>
-	<key>label</key>
-	<string>Respring</string>
-	<key>action</key>
-	<string>respring</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Respring</string>
+			<key>action</key>
+			<string>respring</string>
 		</dict>
 		<dict>
 			<key>action</key>
