@@ -5,6 +5,6 @@ Here I will share my offsets and source codes of my mods so you can learn. Most 
 
 Some sources are from public, credits are already included
 
-**Don't ask me for code of specific game. I only share codes when I want to, and when i'm no longer interested of the specific game, or games that are discontinued/dead. Also don't ask me anything about codes I have found, they are already explained for you.**
+**Don't ask me for code of specific game. I only share codes when I feel like to, when i'm no longer interested of the specific game, games that are discontinued/dead. Also don't ask me anything about codes from here, they are already explained for you.**
 
 Have fun :)
