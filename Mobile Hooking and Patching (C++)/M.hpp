@@ -1,9 +1,9 @@
-//LGL Mod Menu
-
 #include <pthread.h>
 #include "KittyMemory/MemoryPatch.h"
 #include "KittyMemory/Logger.h"
 #import "Includes/Utils.h"
+
+#define SoFile /*libapp.so*/XorStr<0x7C,10,0x78DCEC>("\x10\x14\x1C\x1E\xF0\xF1\xAC\xF0\xEB"+0x78DCEC).s
 
 int ohk = 0;
 int godmode = 0;
@@ -11,6 +11,9 @@ bool silentaim = true;
 
 bool hack1 = false, hack2 = false, hack3 = false;
 
+extern "C" {
+
+int dmgmul = 1, defmul = 1;
 JNIEXPORT void JNICALL
 Java_uk_lgl_modmenu_FloatingModMenuService_Changes(
         JNIEnv *env,
@@ -20,12 +23,14 @@ Java_uk_lgl_modmenu_FloatingModMenuService_Changes(
 
     // You must count your features from 0, not 1
     switch (feature) {
-        // The category was 0 so "case 0" is not needed
-        case 0: // Switch
-            hack1 = !hack1;
+		case 0: // Switch 2
+			hack1 = !hack1;
             break;
-        case 1: // Switch 2
+		case 1: // Switch
 			hack2 = !hack2;
+            break;
+		case 2: // Switch
+			hack3 = !hack3;
             break;
     }
 }
@@ -47,7 +52,8 @@ Java_uk_lgl_modmenu_FloatingModMenuService_getFeatureList(
     // InputValue_[feature name]
     const char *features[] = {
             "Toggle_1 hit kill",
-            "Toggle_God mode"}; 
+			"Toggle_God mode",
+			"Toggle_High speed"}; 
 
     int Total_Feature = (sizeof features /
                          sizeof features[0]); //Now you dont have to manually update the number everytime;
@@ -63,27 +69,51 @@ Java_uk_lgl_modmenu_FloatingModMenuService_getFeatureList(
 }
 
 #define libName "libil2cpp.so"
-
-void (*Die)(void *_this);
-int (*GetSide)(void *_this);
-
-void (*orig_OnDamage)(void *_this, float a1, void *a2, Vector3 a3, void *a4, bool a5, bool a6, bool a7, bool a8);
-void OnDamage(void *_this, float a1, void *a2, Vector3 a3, void *a4, bool a5, bool a6, bool a7, bool a8) {
-	if(_this != NULL)
-	{ 
-		int getside = GetSide(_this);
-		if (hack1 & getside == 2)
+int team;
+float (*orig_SetDamage)(void *_this, int a0, float a1, int a2, int a3, bool a4, int a5);
+float SetDamage(void* _this, int a0, float a1, int a2, int a3, bool a4, int a5) {
+	if (_this != NULL)
+	{
+		void* m_ability = *(void**)((uint32_t)_this + 0x64); 
+		team = *(int *)((uint32_t)_this + 0x20); //protected eTEAM_TYPE m_team;
+		if (hack1 && team == 1)
 		{
-			return orig_OnDamage(_this, 1, a2, a3, a4, a5, a6, a7, a8);
+			return orig_SetDamage(_this, a0, a1 * 999, a2, a3, a4, a5);
 		}
-		if (hack2 & getside == 1)
+		if (hack2 && team != 1)
 		{
-			return;
+			return 0.0f;
 		}
 	}
-	return orig_OnDamage(_this, a1, a2, a3, a4, a5, a6, a7, a8);
+	return orig_SetDamage(_this, a0, a1, a2, a3, a4, a5);
 }
 
+float (*orig_RunActionSpeed)(void *_this);
+float RunActionSpeed(void *_this){
+	if (_this != NULL && hack3)
+	{
+		return 15.0f;
+	}
+	return orig_RunActionSpeed(_this);
+}
+
+float (*orig_RunSpeed)(void *_this);
+float RunSpeed(void *_this){
+	if (_this != NULL && hack3)
+	{
+		return 15.0f;
+	}
+	return orig_RunSpeed(_this);
+}
+
+float (*orig_WalkSpeed)(void *_this);
+float WalkSpeed(void *_this){
+	if (_this != NULL && hack3)
+	{
+		return 15.0f;
+	}
+	return orig_WalkSpeed(_this);
+}
 
 // ---------- Hooking ---------- //
 
@@ -98,11 +128,12 @@ void *hack_thread(void *) {
         il2cppMap = KittyMemory::getLibraryMap(libName);
         sleep(1);
     } while (!il2cppMap.isValid());
+	//LOGD("abe");
 	
-    MSHookFunction((void*)getAbsoluteAddress(libName, 0x000000), (void*)OnDamage, (void**) &orig_OnDamage);
-	
-	Die = (void(*)(void *))(void*)getAbsoluteAddress(libName, 0x000000);
-	GetSide = (int(*)(void *))(void*)getAbsoluteAddress(libName, 0x000000);
+    MSHookFunction((void*)getAbsoluteAddress(libName, 0x63D2E0), (void*)SetDamage, (void**) &orig_SetDamage);
+    MSHookFunction((void*)getAbsoluteAddress(libName, 0x63FA50), (void*)RunActionSpeed, (void**) &orig_RunActionSpeed);
+    MSHookFunction((void*)getAbsoluteAddress(libName, 0x639920), (void*)RunSpeed, (void**) &orig_RunSpeed);
+    MSHookFunction((void*)getAbsoluteAddress(libName, 0x63F808), (void*)WalkSpeed, (void**) &orig_WalkSpeed);
 	
     return NULL;
 }
@@ -111,4 +142,8 @@ __attribute__((constructor))
 void libhook_main() {
 	pthread_t ptid;
 	pthread_create(&ptid, NULL, hack_thread, NULL);
+	
+	if (sub_3216) {
+        exit(999);
+    }
 }

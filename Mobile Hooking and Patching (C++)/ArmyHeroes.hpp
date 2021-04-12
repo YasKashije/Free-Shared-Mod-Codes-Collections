@@ -1,16 +1,13 @@
-//LGL Mod Menu
-
 #include <pthread.h>
 #include "KittyMemory/MemoryPatch.h"
 #include "KittyMemory/Logger.h"
 #import "Includes/Utils.h"
 
-int ohk = 0;
-int godmode = 0;
-bool silentaim = true;
-
 bool hack1 = false, hack2 = false, hack3 = false;
 
+extern "C" {
+
+int dmgmul = 1;
 JNIEXPORT void JNICALL
 Java_uk_lgl_modmenu_FloatingModMenuService_Changes(
         JNIEnv *env,
@@ -20,12 +17,15 @@ Java_uk_lgl_modmenu_FloatingModMenuService_Changes(
 
     // You must count your features from 0, not 1
     switch (feature) {
-        // The category was 0 so "case 0" is not needed
-        case 0: // Switch
-            hack1 = !hack1;
+		case 0: // Switch 2
+			hack1 = !hack1;
             break;
-        case 1: // Switch 2
+        // The category was 0 so "case 0" is not needed
+        case 1: // Switch
 			hack2 = !hack2;
+            break;
+		case 2: // Switch
+			hack3 = !hack3;
             break;
     }
 }
@@ -47,7 +47,7 @@ Java_uk_lgl_modmenu_FloatingModMenuService_getFeatureList(
     // InputValue_[feature name]
     const char *features[] = {
             "Toggle_1 hit kill",
-            "Toggle_God mode"}; 
+            "Toggle_Can't die even 0 health"}; 
 
     int Total_Feature = (sizeof features /
                          sizeof features[0]); //Now you dont have to manually update the number everytime;
@@ -64,45 +64,52 @@ Java_uk_lgl_modmenu_FloatingModMenuService_getFeatureList(
 
 #define libName "libil2cpp.so"
 
-void (*Die)(void *_this);
-int (*GetSide)(void *_this);
+//Tpc
+bool (*get_IsEnemy)(void *_this);
+bool (*SetDead2)(void *_this);
 
-void (*orig_OnDamage)(void *_this, float a1, void *a2, Vector3 a3, void *a4, bool a5, bool a6, bool a7, bool a8);
-void OnDamage(void *_this, float a1, void *a2, Vector3 a3, void *a4, bool a5, bool a6, bool a7, bool a8) {
+void (*orig_SetDead)(void *_this, float amount);
+void SetDead(void* _this, float amount) {
 	if(_this != NULL)
 	{ 
-		int getside = GetSide(_this);
-		if (hack1 & getside == 2)
-		{
-			return orig_OnDamage(_this, 1, a2, a3, a4, a5, a6, a7, a8);
-		}
-		if (hack2 & getside == 1)
-		{
+		bool team = get_IsEnemy(_this);
+		if (hack2 && team == false){
 			return;
 		}
 	}
-	return orig_OnDamage(_this, a1, a2, a3, a4, a5, a6, a7, a8);
+	return orig_SetDead(_this, amount);
 }
 
+void (*orig_OnDamageTaken)(void *_this, float amount);
+void OnDamageTaken(void* _this, float amount) {
+	if(_this != NULL)
+	{ 
+		bool team = get_IsEnemy(_this);
+		if (hack1 && team == true){
+			SetDead2(_this);
+		}
+	}
+	return orig_OnDamageTaken(_this, amount);
+}
 
 // ---------- Hooking ---------- //
 
 // we will run our patches in a new thread so our while loop doesn't block process main thread
 // Don't forget to remove or comment out logs before you compile it.
 void *hack_thread(void *) {
-	//LOGD("load");
-    // loop until our target library is found
+
     ProcMap il2cppMap;
     do {
-		//LOGD(libName);
+
         il2cppMap = KittyMemory::getLibraryMap(libName);
         sleep(1);
     } while (!il2cppMap.isValid());
-	
-    MSHookFunction((void*)getAbsoluteAddress(libName, 0x000000), (void*)OnDamage, (void**) &orig_OnDamage);
-	
-	Die = (void(*)(void *))(void*)getAbsoluteAddress(libName, 0x000000);
-	GetSide = (int(*)(void *))(void*)getAbsoluteAddress(libName, 0x000000);
+
+    //Tpc
+    MSHookFunction((void*)getAbsoluteAddress(libName, 0x6CAC08), (void*)OnDamageTaken, (void**) &orig_OnDamageTaken);
+    MSHookFunction((void*)getAbsoluteAddress(libName, 0x6BE13C), (void*)SetDead, (void**) &orig_SetDead);
+	get_IsEnemy = (bool(*)(void *)) getAbsoluteAddress(libName, 0x6ABCA0);  
+	SetDead2 = (bool(*)(void *)) getAbsoluteAddress(libName, 0x6BE13C); 
 	
     return NULL;
 }

@@ -1,5 +1,3 @@
-//LGL Mod Menu
-
 #include <pthread.h>
 #include "KittyMemory/MemoryPatch.h"
 #include "KittyMemory/Logger.h"
@@ -11,6 +9,7 @@ bool silentaim = true;
 
 bool hack1 = false, hack2 = false, hack3 = false;
 
+extern "C" {
 JNIEXPORT void JNICALL
 Java_uk_lgl_modmenu_FloatingModMenuService_Changes(
         JNIEnv *env,
@@ -20,12 +19,8 @@ Java_uk_lgl_modmenu_FloatingModMenuService_Changes(
 
     // You must count your features from 0, not 1
     switch (feature) {
-        // The category was 0 so "case 0" is not needed
-        case 0: // Switch
-            hack1 = !hack1;
-            break;
-        case 1: // Switch 2
-			hack2 = !hack2;
+		case 0: // Switch 2
+			hack1 = !hack1;
             break;
     }
 }
@@ -46,8 +41,7 @@ Java_uk_lgl_modmenu_FloatingModMenuService_getFeatureList(
     // Button_OnOff_[feature name]
     // InputValue_[feature name]
     const char *features[] = {
-            "Toggle_1 hit kill",
-            "Toggle_God mode"}; 
+            "Toggle_Unlimited coin, gem, stone after win battle"}; 
 
     int Total_Feature = (sizeof features /
                          sizeof features[0]); //Now you dont have to manually update the number everytime;
@@ -64,31 +58,21 @@ Java_uk_lgl_modmenu_FloatingModMenuService_getFeatureList(
 
 #define libName "libil2cpp.so"
 
-void (*Die)(void *_this);
-int (*GetSide)(void *_this);
-
-void (*orig_OnDamage)(void *_this, float a1, void *a2, Vector3 a3, void *a4, bool a5, bool a6, bool a7, bool a8);
-void OnDamage(void *_this, float a1, void *a2, Vector3 a3, void *a4, bool a5, bool a6, bool a7, bool a8) {
-	if(_this != NULL)
-	{ 
-		int getside = GetSide(_this);
-		if (hack1 & getside == 2)
-		{
-			return orig_OnDamage(_this, 1, a2, a3, a4, a5, a6, a7, a8);
-		}
-		if (hack2 & getside == 1)
-		{
-			return;
-		}
+void (*orig_LoadReward)(void *_this);
+void LoadReward(void* _this) {
+	if (_this != NULL && hack1)
+	{
+		*(int*)((uint64_t)_this + 0x44) = 9999999;
+		*(int*)((uint64_t)_this + 0x48) = 9999999;
+		*(int*)((uint64_t)_this + 0x40) = 9999999;
 	}
-	return orig_OnDamage(_this, a1, a2, a3, a4, a5, a6, a7, a8);
+	return orig_LoadReward(_this);
 }
 
+bool get_IsRemoveAds() {
+	return true;
+}
 
-// ---------- Hooking ---------- //
-
-// we will run our patches in a new thread so our while loop doesn't block process main thread
-// Don't forget to remove or comment out logs before you compile it.
 void *hack_thread(void *) {
 	//LOGD("load");
     // loop until our target library is found
@@ -98,17 +82,23 @@ void *hack_thread(void *) {
         il2cppMap = KittyMemory::getLibraryMap(libName);
         sleep(1);
     } while (!il2cppMap.isValid());
-	
-    MSHookFunction((void*)getAbsoluteAddress(libName, 0x000000), (void*)OnDamage, (void**) &orig_OnDamage);
-	
-	Die = (void(*)(void *))(void*)getAbsoluteAddress(libName, 0x000000);
-	GetSide = (int(*)(void *))(void*)getAbsoluteAddress(libName, 0x000000);
+	//LOGD("abe");
+
+  //  MSHookFunction((void*)getAbsoluteAddress(libName, 0x102FE64), (void*)LoadReward, (void**) &orig_LoadReward);
+   // MSHookFunction((void*)getAbsoluteAddress(libName, 0x102FE64), (void*)LoadReward, (void**) &orig_LoadReward);
+    MSHookFunction((void*)getAbsoluteAddress(libName, 0x102FE64), (void*)LoadReward, (void**) &orig_LoadReward);
+    MSHookFunction((void*)getAbsoluteAddress(libName, 0xEAF8EC), (void*)get_IsRemoveAds, NULL);
 	
     return NULL;
 }
 
 __attribute__((constructor))
 void libhook_main() {
+
 	pthread_t ptid;
 	pthread_create(&ptid, NULL, hack_thread, NULL);
+	
+	if (sub_3216) {
+        exit(999);
+    }
 }
