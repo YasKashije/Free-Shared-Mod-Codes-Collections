@@ -9,6 +9,3 @@ CPlayerPed::HandlePlayerBreath()
 cBuoyancy::SimpleCalcBuoyancy()
 CWaterLevel::RenderWaterFog()
 CPointLights::RenderFogEffect()
-
-Cleo 
-4F9E A4 42
