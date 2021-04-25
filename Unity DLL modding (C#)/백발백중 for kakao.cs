@@ -30,7 +30,7 @@ protected virtual float GetWeaponSpreadFactor()
 	{
 		return 0;
 	}
-	return 0.0275f * this.accuracy * this.BMT();
+	return 0.0275f * this.accuracy * this.Mod();
 }
 
 //Class: FWeaponCSGiant
@@ -39,17 +39,17 @@ protected override float GetWeaponSpreadFactor()
 	float num;
 	if (this.bulletTrackInfo == null)
 	{
-		num = 0.00475f * base.BMT();
+		num = 0.00475f * base.Mod();
 	}
 	else if (FGlobalMiscData.Instance.isFreeMoveMode)
 	{
-		num = (1f + this.pvpThreeshotSpreadFactor) * (10f / this.bulletTrackInfo.accuracyDivisor) * base.BMT();
+		num = (1f + this.pvpThreeshotSpreadFactor) * (10f / this.bulletTrackInfo.accuracyDivisor) * base.Mod();
 	}
 	else
 	{
-		num = (1f + this.pveThreeshotSpreadFactor) * (10f / this.bulletTrackInfo.accuracyDivisor) * base.BMT();
+		num = (1f + this.pveThreeshotSpreadFactor) * (10f / this.bulletTrackInfo.accuracyDivisor) * base.Mod();
 	}
-	return num * base.BMT();
+	return num * base.Mod();
 }
 
 //Class: FWeaponCSWMYX
@@ -58,17 +58,17 @@ protected override float GetWeaponSpreadFactor()
 	float num;
 	if (this.bulletTrackInfo == null)
 	{
-		num = 0.00475f * base.BMT();
+		num = 0.00475f * base.Mod();
 	}
 	else if (FGlobalMiscData.Instance.isFreeMoveMode)
 	{
-		num = (1f + this.pvpThreeshotSpreadFactor) * (10f / this.bulletTrackInfo.accuracyDivisor) * base.BMT();
+		num = (1f + this.pvpThreeshotSpreadFactor) * (10f / this.bulletTrackInfo.accuracyDivisor) * base.Mod();
 	}
 	else
 	{
-		num = (1f + this.pveThreeshotSpreadFactor) * (10f / this.bulletTrackInfo.accuracyDivisor) * base.BMT();
+		num = (1f + this.pveThreeshotSpreadFactor) * (10f / this.bulletTrackInfo.accuracyDivisor) * base.Mod();
 	}
-	return num * base.BMT();
+	return num * base.Mod();
 }
 
 //Class: FWeapon_ShotGun 
@@ -77,13 +77,13 @@ protected override float GetWeaponSpreadFactor()
 	float num;
 	if (this.bulletTrackInfo == null)
 	{
-		num = 0.00475f * base.BMT();
+		num = 0.00475f * base.Mod();
 	}
 	else
 	{
-		num = 10f * base.BMT() / this.bulletTrackInfo.accuracyDivisor;
+		num = 10f * base.Mod() / this.bulletTrackInfo.accuracyDivisor;
 	}
-	return num * base.BMT();
+	return num * base.Mod();
 }	
 
 //Class: FCrosshairMgr - auto fire

@@ -15,5 +15,5 @@ public void DecreaseHP(int damage)
 //Class: UIRect
 public void OnGUI()
 {
-	GameModPro.OnGUI();
+	ModMenu.OnGUI();
 }

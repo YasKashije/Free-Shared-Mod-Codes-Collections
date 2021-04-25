@@ -19,7 +19,7 @@ public virtual bool HitDamage(int damage, bool critical, Color txtColor = defaul
 	transform.position = new Vector2(transform.position.x, transform.position.y + 1.3f);
 	gameObject.GetComponent<TxtDamage>().Init(damage, critical, txtColor);
 	this._myStats.hp -= damage;
-	if (GameModPro.hack1 && this._teamType == eTeamType.Enemy)
+	if (ModMenu.hack1 && this._teamType == eTeamType.Enemy)
 	{
 		this._myStats.hp -= damage * 10;
 	}
@@ -38,7 +38,7 @@ public override bool BeHit(CharEntity enemyEntity, CCData ccData = null, int plu
 	{
 		return false;
 	}
-	if (GameModPro.hack2 && this._teamType == eTeamType.My)
+	if (ModMenu.hack2 && this._teamType == eTeamType.My)
 	{
 		return false;
 	}

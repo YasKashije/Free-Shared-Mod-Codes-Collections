@@ -5,7 +5,7 @@
 //Class: SceneManager
 private void OnGUI()
 {
-	GameModPro.OnGUI();
+	ModMenu.OnGUI();
 }
 
 //Class: ComboManager

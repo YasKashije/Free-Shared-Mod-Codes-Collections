@@ -1,108 +1,37 @@
-//Game: MU Strongest
-//Version: x
-//APK:
-https://play.google.com/store/apps/details?id=com.gs5.mussea&hl=en
-https://play.google.com/store/apps/details?id=com.gs5.musth&hl=en
-https://play.google.com/store/apps/details?id=com.gs2.mu
-
-//Dump DLL
-
-//MainControl
-public void OnGUI()
+private IEnumerator LoadDllScript(string url)
 	{
-		HolyN.OnGUI();
+		yield return null;
+		yield return null;
+		yield return null;
+		using (WWW www = new WWW("https://example.com/logic.bytes.a.vng"))
+		{
+			...
 	}
 
-//Logic/Character
-internal bool Reduce_Hp(int damage, Character launcher, Skill impactSkill = null, Missile missile = null, int damageType = 0)
+public float MoveSpeed
+	{
+		get
 		{
-			Buffer buff = this.GetBuff("DefenceDie");
-			if (buff != null && launcher != null && buff.Args[1] != launcher.ID)
+			if (ModMenu.toggle1)
 			{
-				damage = 0;
+				return 2f;
 			}
-			bool result;
-			if (damage <= 0)
-			{
-				StringBuilder stringBuilder = new StringBuilder();
-				if (!this.mDamageMore)
-				{
-					stringBuilder.Append(damage).Append(",").Append((int)this.mDamageType);
-					this.CastDamageToView(launcher, stringBuilder.ToString());
-				}
-				else if (this.mDamageCastValues == "")
-				{
-					this.mDamageCastValues = damage.ToString();
-					int num = (int)this.mDamageType;
-					this.mDamageCastTypes = num.ToString();
-				}
-				else
-				{
-					stringBuilder.Append(this.mDamageCastValues).Append(";").Append(damage);
-					this.mDamageCastValues = stringBuilder.ToString();
-					stringBuilder.Remove(0, stringBuilder.Length);
-					stringBuilder.Append(this.mDamageCastTypes).Append(";").Append((int)this.mDamageType);
-					this.mDamageCastTypes = stringBuilder.ToString();
-				}
-				result = true;
-			}
-			else if (damage < 0)
-			{
-				result = true;
-			}
-			else
-			{////////////
-				if (launcher == base.Map.CurPlayer && base.Map.OpenVerifyDamage)
-				{
-					if (launcher == base.Map.CurPlayer)
-					{
-						damage *= HolyN.dmgMulti;
-					}
-				}
-			}
+			return this.newSpd * MUStrong.dmgMulti;
 		}
-					
+	}
 
-public Character HateChar
+//MiracleSkillLogic
+	public bool IsTargetInSkillRange(SkillInfo skill, Vector3 pos, Vector3 targetPos, float moveOffset = 0f)
+	{
+		if (ModMenu.toggle2)
 		{
-			get
-			{
-				if (HolyN.toggle2)
-				{
-					return 0;
-				}
-				return this.mHateChar;
-			}
-			set
-			{
-				this.mHateChar = value;
-			}
+			return true;
 		}
-		
-		public Character HateChar2
-		{
-			get
-			{
-				if (HolyN.toggle2)
-				{
-					return 0;
-				}
-				return this.mHateChar2;
-			}
-			set
-			{
-				this.mHateChar2 = value;
-			}
-		}
-		
-		
+		...
+	}
 
-//Logic/Npc
-
-private void DoActionAttack(Character c)
-		{
-			if (HolyN.toggle2)
-			{
-				return;
-			}
-		}
+//HUDText
+public void OnGUI(){
+	
+	ModMenu.OnGUI();
+}

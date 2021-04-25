@@ -119,7 +119,7 @@ public float RunSpeed
 {
 	get
 	{
-		if (GameModPro.hack3)
+		if (ModMenu.hack3)
 		{
 			return 2f;
 		}

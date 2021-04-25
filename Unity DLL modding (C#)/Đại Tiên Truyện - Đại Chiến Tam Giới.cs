@@ -42,5 +42,5 @@ public virtual void ApplyDamage(BaseObject attacker, Skill skill, int damage)
 //UIRoot
 public void OnGUI()
 {
-	GameModPro.OnGUI();
+	ModMenu.OnGUI();
 }
