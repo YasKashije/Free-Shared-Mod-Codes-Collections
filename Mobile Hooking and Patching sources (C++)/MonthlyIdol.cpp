@@ -12,10 +12,12 @@
 bool PlayerUpdateHookInitialized = false;
 const char* libName = "libil2cpp.so";
 
+//public class cashshop_controll : MonoBehaviour
 void (*btn_gam_5)() = (void(*)())getAbsoluteAddress(libName, 0x43BB14);
 void (*btn_Pinkgam_5)() = (void(*)())getAbsoluteAddress(libName, 0x43BF40);
 void (*rear_btn_money_10)(void *_this) = (void(*)(void *))getAbsoluteAddress(libName, 0x43B73C);
 
+//public class setting_controll : MonoBehaviour
 void (*orig_btn_ThnaksTo)(void *_this);
 void btn_ThnaksTo(void* _this) {
 	if(_this != NULL){
