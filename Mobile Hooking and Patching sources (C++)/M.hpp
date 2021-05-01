@@ -3,7 +3,7 @@
 #include "KittyMemory/Logger.h"
 #import "Includes/Utils.h"
 
-#define SoFile /*libapp.so*/XorStr<0x7C,10,0x78DCEC>("\x10\x14\x1C\x1E\xF0\xF1\xAC\xF0\xEB"+0x78DCEC).s
+#define SoFile "libapp.so"
 
 int ohk = 0;
 int godmode = 0;
