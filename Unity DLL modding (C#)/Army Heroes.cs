@@ -1,20 +1,25 @@
 //Game: Army Heroes
-//Version: 0.4.1
-//APK: https://apkcombo.com/army-heroes/com.progressgames.army.heroes/download/zip
+//Version: 0.4.2
+//APK: https://apkpure.com/army-heroes/com.progressgames.army.heroes
 
-//Namespace: LongAutumn.Framework.Data.Properties
-//Class: CurrencyProperty
-//Unlimited money
+//CurrencyProperty
+public int First
+{
+	get
+	{
+		return 999999;
+	}
+}	
+
 public int Second
 {
 	get
 	{
-		return 999999999;
+		return 999999;
 	}
-}
+}	
 		
-//Class: Tpc
-//1 hit - God mode
+//Tpc
 private void OnDamageTaken(float amount)
 {
 	if (this.IsEnemy)
@@ -22,6 +27,3 @@ private void OnDamageTaken(float amount)
 		this.SetDead();
 	}
 }
-		
-//Class: ExtendedListenersButton
-private float longEnoughHoldTime = 1f;
