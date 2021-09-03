@@ -1,8 +1,12 @@
-# Free Shared Mod Codes Collections
-The all are free share collections of game mod source codes and offsets
+# All Are Free Share Mod Products Codes Collections
+The collections of game mod products source codes and offsets =D
+ 
+Here I will share my offsets, source codes and function names so you can learn and see how I wrote the code, and get ideas. Most codes are very old back to 2014, mostly from dead/abandoned/server closed games. Not all codes are modding tho, some of them are just notes, sources may look messy. Some sources are from public with proper credits given. I know this repo is obviously a spoonfeeder but... why not share when it's no longer secret? XD
 
-Here I will share my offsets and source codes of which is made by me and my friends so you can learn. Most codes are very old back to 2014. Not all codes are modding tho, some of them are just notes about game codes, they may look quite messy. Some sources are from public with proper credits given.
+And also, it's to stop leechers from leeching my offsets when it's impossible to stop them. Now they can just find this straight forward without leeching hehe. I'll try to share my codes of my active mods when i can, but at the same time i don't want devs patching something, maybe i'll do only if idc about specific games
 
-**Don't ask me for code of specific game. I only share codes when I feel like to, when i'm no longer interested of the specific game, games that are discontinued/dead. Also don't ask me anything about codes from here, they are already explained for you.**
+I have turned off issues, because i don't read it often and don't want spam links and noobs asking how to use it.
+
+I'll appreciate if you can credit to me and others (if mentioned) at least
 
 Have fun :)
